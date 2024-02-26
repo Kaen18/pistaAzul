@@ -30,11 +30,11 @@ const { mainCancelacion } = require("./src/flows/flow_cancelacion");
  * TODO: Pasar claves sensibles a un .env
  * TODO: Crear control de .env para no queden vacios las claves
  */
-const MYSQL_DB_HOST = "localhost";
-const MYSQL_DB_USER = "root";
-const MYSQL_DB_PASSWORD = "d1t3mpl4";
-const MYSQL_DB_NAME = "pistaazul";
-const MYSQL_DB_PORT = "3306";
+const MYSQL_DB_HOST = process.env.MYSQL_DB_HOST;
+const MYSQL_DB_USER = process.env.MYSQL_DB_USER;
+const MYSQL_DB_PASSWORD = process.env.MYSQL_DB_PASSWORD;
+const MYSQL_DB_NAME = process.env.MYSQL_DB_NAME;
+const MYSQL_DB_PORT = process.env.MYSQL_DB_PORT;
 
 const flowSecundario = addKeyword(["2", "siguiente"]).addAnswer([
   "📄 Aquí tenemos el flujo secundario",
@@ -136,11 +136,10 @@ const main = async () => {
   ]);
 
   const adapterProvider = createProvider(MetaProvider, {
-    jwtToken:
-      "EAAJ9nQRK4vYBO33KBRlWQOLvFxRNSataZBQuzit3VZCv2fzf2oHqo497cf7qgkmGk0F6YRZBOalR6ANZC011VOhyYz46E2sprUgTFQTl1YjzBMvPsyZC0cN0psa1F1bCSi3EBMbgJWXoAI8KuLyL9KXTdTpK5ivqvehu3G8wZADNSOHZBeMg5ljZClkgkZBiwNH4XwDEGq6vMjHe89N6ZAsYxoRDo5CuZAJ8UB5FdoK",
-    numberId: "250616228128354",
-    verifyToken: "K4enH3ndyma",
-    version: "v19.0",
+    jwtToken:process.env.JWTOKEN,
+    numberId: process.env.NUMBERID,
+    verifyToken: process.env.VERIFYTOKEN,
+    version: process.env.VERSION,
   });
 
   createBot({
