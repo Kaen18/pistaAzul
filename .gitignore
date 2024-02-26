@@ -1,0 +1,5 @@
+.env
+node_modules
+README.md
+core.class.log
+queue.class.log
