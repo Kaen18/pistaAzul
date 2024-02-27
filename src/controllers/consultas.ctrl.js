@@ -1,7 +1,9 @@
 const {
   obtenerHorariosReservas,
   usuExist,
+  obtenerReservas,
 } = require("../services/consultas.sv");
+const { formatArrayReserva } = require("../utils/format.utl");
 const { saveUser } = require("./reserva.ctrl");
 
 // TODO: Control de Errores
@@ -55,4 +57,19 @@ exports.userExist = async (correo, nombre) => {
     console.error(`[userExist] Error: ${error}`);
     throw error;
   }
+};
+
+exports.consultarReservas = async (telefono) => {
+  try {
+    console.log(`[consultarReservas] telefono: ${telefono}`);
+    const result = await obtenerReservas(telefono);
+    console.log(`[consultarReservas] result: ${JSON.stringify(result)}`);
+    if (Array.isArray(result) && result.length > 0) {
+      const formatReserva = await formatArrayReserva(result);
+      console.log(`[consultarReservas] formatReserva: ${JSON.stringify(formatReserva)}`);
+      return formatReserva;
+    } else {
+      return [];
+    }
+  } catch (error) {}
 };

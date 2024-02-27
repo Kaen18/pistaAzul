@@ -38,11 +38,13 @@ exports.obtenerReservas = async (telefono, ci = "unknown") => {
     const formattedDate = `${today.getFullYear()}-${(today.getMonth() + 1)
       .toString()
       .padStart(2, "0")}-${today.getDate().toString().padStart(2, "0")}`;
-    let query = `select * from reserva where fecha >= '${formattedDate}' and numero_celular = '${telefono}' and cedula_identidad = '${ci}'`;
+    let query = `select * from reserva where fecha >= '${formattedDate}' and numero_celular = '${telefono}' and cedula_identidad = '${ci}' order by fecha, hora_inicio asc`;
     query =
       ci === "unknown"
-        ? query
-        : `select * from reserva where fecha >= '${formattedDate}' and numero_celular = '${telefono}'`;
+        ? `select * from reserva where fecha >= '${formattedDate}' and numero_celular = '${telefono}' order by fecha, hora_inicio asc`
+        : query;
+
+        console.log(`[obtenerReservas] query ${query}`)
 
     conexion.query(query, (error, results) => {
       if (error) {

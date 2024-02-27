@@ -40,7 +40,7 @@ const mainReservas = addKeyword([
   async (ctx, { flowDynamic, gotoFlow, state }) => {
     await state.update({ datosReserva: {} });
 
-    const data = state.getMyState();
+    const data = await state.getMyState();
 
     data.datosReserva["pista"] = 0;
     data.datosReserva["fecha"] = "";
