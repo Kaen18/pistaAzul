@@ -30,14 +30,11 @@ const { mainCancelacion } = require("./src/flows/flow_cancelacion");
  * TODO: Pasar claves sensibles a un .env ✅
  * TODO: Crear control de .env para no queden vacios las claves
  */
-
 const MYSQL_DB_HOST = process.env.MYSQL_DB_HOST;
 const MYSQL_DB_USER = process.env.MYSQL_DB_USER;
 const MYSQL_DB_PASSWORD = process.env.MYSQL_DB_PASSWORD;
 const MYSQL_DB_NAME = process.env.MYSQL_DB_NAME;
 const MYSQL_DB_PORT = process.env.MYSQL_DB_PORT;
-
-console.log(`[MAIN] MYSQL_DB_HOST: ${MYSQL_DB_HOST} MYSQL_DB_USER: ${MYSQL_DB_USER} MYSQL_DB_PASSWORD: ${MYSQL_DB_PASSWORD} MYSQL_DB_NAME: ${MYSQL_DB_NAME} MYSQL_DB_PORT: ${MYSQL_DB_PORT}`)
 
 const flowSecundario = addKeyword(["2", "siguiente"]).addAnswer([
   "📄 Aquí tenemos el flujo secundario",
