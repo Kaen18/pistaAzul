@@ -18,8 +18,8 @@ const { userExist } = require("../controllers/consultas.ctrl");
 const { saveUser, saveReserva } = require("../controllers/reserva.ctrl");
 
 /**
- * TODO: Guardar reservas en la base de datos
- * TODO: Controlar que el horario seleccionado no este reservado
+ * TODO: Guardar reservas en la base de datos ✅
+ * TODO: Controlar que el horario seleccionado no este reservado 
  * TODO: Agregar los botones 🔙
  * TODO: Mejorar mensaje de finalizacion
  * TODO: Enviar ubicacion
@@ -58,7 +58,7 @@ const flowCanchaFirst = addKeyword(["Ver cancha 1 🥅", "cancha 1"]).addAnswer(
   "Te presento algunas imagenes de la cancha",
   null,
   async (ctx, { flowDynamic, state }) => {
-    await flowDynamic("_Un momento mientras se procesan las imagenes ⌛_");
+    /*await flowDynamic("_Un momento mientras se procesan las imagenes ⌛_");
     await flowDynamic([
       {
         body: "imagen",
@@ -72,7 +72,7 @@ const flowCanchaFirst = addKeyword(["Ver cancha 1 🥅", "cancha 1"]).addAnswer(
         media:
           "https://elsuperhincha.com/wp-content/uploads/2021/03/saque-esquina-futsal.jpg",
       },
-    ]);
+    ]);*/
     const data = state.getMyState();
     data.datosReserva.pista = 1;
     await flowDynamic(
@@ -195,7 +195,8 @@ const nodoPresentarHoras = addKeyword(EVENTS.ACTION)
 
     const listaHoras = await generarHoras(
       data.datosReserva.fecha,
-      data.datosReserva.pista
+      data.datosReserva.pista,
+      data.datosReserva["horarios"]
     );
 
     console.log(listaHoras);
@@ -356,7 +357,7 @@ const nodoFinalizarReserva = addKeyword(EVENTS.ACTION).addAnswer(
     _Nombre: ${data.datosReserva.nombre}_\n
     _Fecha: ${data.datosReserva.fecha}_\n
     _Horas:_\n
-    _${LISTA_HORARIOS}_
+    ${LISTA_HORARIOS}
     ------------------------
     `;
 

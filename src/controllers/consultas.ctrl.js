@@ -2,6 +2,8 @@ const {
   obtenerHorariosReservas,
   usuExist,
   obtenerReservas,
+  obtenerFechaReservas,
+  obtenerHorarioPorReserva,
 } = require("../services/consultas.sv");
 const { formatArrayReserva } = require("../utils/format.utl");
 const { saveUser } = require("./reserva.ctrl");
@@ -59,17 +61,69 @@ exports.userExist = async (correo, nombre) => {
   }
 };
 
-exports.consultarReservas = async (telefono) => {
+exports.consultarReservas = async (telefono, cedula) => {
   try {
     console.log(`[consultarReservas] telefono: ${telefono}`);
-    const result = await obtenerReservas(telefono);
+    const result = await obtenerReservas(telefono, cedula);
     console.log(`[consultarReservas] result: ${JSON.stringify(result)}`);
     if (Array.isArray(result) && result.length > 0) {
       const formatReserva = await formatArrayReserva(result);
-      console.log(`[consultarReservas] formatReserva: ${JSON.stringify(formatReserva)}`);
+      console.log(
+        `[consultarReservas] formatReserva: ${JSON.stringify(formatReserva)}`
+      );
       return formatReserva;
     } else {
       return [];
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error(`[consultarReservas] error: ${error}`)
+    return []
+  }
 };
+
+exports.consultarFechasReservas = async (telefono, cedula) => {
+  try {
+    console.log(`[consultarFechasReservas] telefono: ${telefono}`);
+    const result = await obtenerFechaReservas(telefono, cedula);
+    if (Array.isArray(result) && result.length > 0) {
+      const dataReturn = [];
+      for (let i = 0; i < result.length; i++) {
+        const element = result[i];
+        dataReturn.push({
+          fecha: element.fecha.toISOString().substring(0, 10),
+          cancha: element.id_cancha,
+        });
+      }
+      return dataReturn;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error(`[consultarFechasReservas] error: ${error}`)
+    return []
+  }
+};
+
+exports.consultarHoraPorFecha = async (fecha,cedula) => {
+  try {
+    const result = await obtenerHorarioPorReserva(fecha, cedula);
+    if (Array.isArray(result) && result.length > 0) {
+      const dataReturn = [];
+      for (let i = 0; i < result.length; i++) {
+        const element = result[i];
+        dataReturn.push({
+          fecha: element.fecha.toISOString().substring(0, 10),
+          cancha: element.id_cancha,
+          inicio:element.hora_inicio,
+          fin:element.hora_fin
+        });
+      }
+      return dataReturn;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error(`[consultarHoraPorFecha] error: ${error}`)
+    return []
+  }
+}

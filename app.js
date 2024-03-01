@@ -4,11 +4,11 @@ const {
   createFlow,
   addKeyword,
 } = require("@bot-whatsapp/bot");
-require("dotenv").config()
+require("dotenv").config();
 
 const MetaProvider = require("@bot-whatsapp/provider/meta");
 const MySQLAdapter = require("@bot-whatsapp/database/mysql");
-const { mainConsultas } = require("./src/flows/flow_consulta");
+const { mainConsultas, presentarReservas } = require("./src/flows/flow_consulta");
 const {
   mainReservas,
   flowCanchaFirst,
@@ -21,7 +21,7 @@ const {
   nodoFinalizarReserva,
   nodeObtenerCI,
 } = require("./src/flows/flow_reserva");
-const { mainCancelacion } = require("./src/flows/flow_cancelacion");
+const { mainCancelacion, nodoPresentarFechas, nodoPresentarHorarios } = require("./src/flows/flow_cancelacion");
 
 /**
  * Declaramos las conexiones de MySQL
@@ -36,59 +36,6 @@ const MYSQL_DB_PASSWORD = process.env.MYSQL_DB_PASSWORD;
 const MYSQL_DB_NAME = process.env.MYSQL_DB_NAME;
 const MYSQL_DB_PORT = process.env.MYSQL_DB_PORT;
 
-const flowSecundario = addKeyword(["2", "siguiente"]).addAnswer([
-  "📄 Aquí tenemos el flujo secundario",
-]);
-
-const flowDocs = addKeyword([
-  "doc",
-  "documentacion",
-  "documentación",
-]).addAnswer(
-  [
-    "📄 Aquí encontras las documentación recuerda que puedes mejorarla",
-    "https://bot-whatsapp.netlify.app/",
-    "\n*2* Para siguiente paso.",
-  ],
-  null,
-  null,
-  [flowSecundario]
-);
-
-const flowTuto = addKeyword(["tutorial", "tuto"]).addAnswer(
-  [
-    "🙌 Aquí encontras un ejemplo rapido",
-    "https://bot-whatsapp.netlify.app/docs/example/",
-    "\n*2* Para siguiente paso.",
-  ],
-  null,
-  null,
-  [flowSecundario]
-);
-
-const flowGracias = addKeyword(["gracias", "grac"]).addAnswer(
-  [
-    "🚀 Puedes aportar tu granito de arena a este proyecto",
-    "[*opencollective*] https://opencollective.com/bot-whatsapp",
-    "[*buymeacoffee*] https://www.buymeacoffee.com/leifermendez",
-    "[*patreon*] https://www.patreon.com/leifermendez",
-    "\n*2* Para siguiente paso.",
-  ],
-  null,
-  null,
-  [flowSecundario]
-);
-
-const flowDiscord = addKeyword(["discord"]).addAnswer(
-  [
-    "🤪 Únete al discord",
-    "https://link.codigoencasa.com/DISCORD",
-    "\n*2* Para siguiente paso.",
-  ],
-  null,
-  null,
-  [flowSecundario]
-);
 
 const flowPrincipal = addKeyword(["hola", "ole", "alo"])
   .addAnswer("🙌 Hola bienvenido a *Pista Azul*⚽")
@@ -133,10 +80,13 @@ const main = async () => {
     nodeObtenerCI,
     nodoObtenerCorreo,
     nodoFinalizarReserva,
+    presentarReservas,
+    nodoPresentarFechas,
+    nodoPresentarHorarios,
   ]);
 
   const adapterProvider = createProvider(MetaProvider, {
-    jwtToken:process.env.JWTOKEN,
+    jwtToken: process.env.JWTOKEN,
     numberId: process.env.NUMBERID,
     verifyToken: process.env.VERIFYTOKEN,
     version: process.env.VERSION,

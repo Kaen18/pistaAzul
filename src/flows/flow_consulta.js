@@ -1,15 +1,34 @@
-const { createBot, createProvider, createFlow, addKeyword } = require('@bot-whatsapp/bot');
+const { createBot, createProvider, createFlow, addKeyword, EVENTS } = require('@bot-whatsapp/bot');
 const { mainReservas } = require('./flow_reserva');
 const { mainCancelacion } = require('./flow_cancelacion');
 const { consultarReservas } = require('../controllers/consultas.ctrl');
 
 
 
-const mainConsultas = addKeyword(['Consultar reservas', 'Ver reservas', 'reservas']).addAnswer("_Buscando reservas ..._",
+const mainConsultas = addKeyword(['Consultar reservas', 'Ver reservas', 'reservas'])
+.addAnswer(
+  "Necesito tu numero de cédula",
+  { capture: true },
+  async (ctx, { flowDynamic, gotoFlow, state }) => {
+    
+    
+    const dataState = await state.update({ ci: ctx.body });
+
+    await gotoFlow(presentarReservas)
+  }
+);
+
+
+
+
+const presentarReservas = addKeyword(EVENTS.ACTION)
+.addAnswer("_Buscando reservas ..._",
 null,
 async (ctx, { flowDynamic, gotoFlow, state }) => {
+
+  const dataState = await state.getMyState();
   
-  const reservas = await consultarReservas(ctx.from)
+  const reservas = await consultarReservas(ctx.from,dataState.ci)
 
   if(reservas.length > 0){
 
@@ -55,4 +74,4 @@ async (ctx, { flowDynamic, gotoFlow, state }) => {
 
 
 
-module.exports = {mainConsultas}
+module.exports = {mainConsultas,presentarReservas}
